@@ -9,27 +9,21 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('doctors.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-user-nurse"></i>
-                        <p>Лікарі</p>
-                    </a>
-                </li>
-                <li class="nav-item">
                     <a href="{{ route('calendar.index') }}" class="nav-link">
                         <i class="nav-icon fas fa-calendar-alt"></i>
                         <p>Календар прийомів</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('day-sheets.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-calendar-day"></i>
-                        <p>Графік днів</p>
+                    <a href="{{ route('doctors.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-user-nurse"></i>
+                        <p>Лікарі</p>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('time-sheets.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-clock"></i>
-                        <p>Робочі години</p>
+                    <a href="{{ route('day-sheets.index') }}" class="nav-link">
+                        <i class="nav-icon fas fa-calendar-day"></i>
+                        <p>Графік днів</p>
                     </a>
                 </li>
                 <li class="nav-item">

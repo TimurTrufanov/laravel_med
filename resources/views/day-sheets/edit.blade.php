@@ -35,6 +35,7 @@
                                             value="{{ $doctor->id }}"
                                             {{ old('doctor_id', $daySheet->doctor_id) == $doctor->id ? 'selected' : '' }}>
                                             {{ $doctor->user->first_name }} {{ $doctor->user->last_name }}
+                                            ({{ $doctor->user->email }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -61,41 +62,32 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>День тижня <span style="color: red;">*</span></label>
-                                <select name="day_of_week"
-                                        class="form-control @error('day_of_week') is-invalid @enderror">
-                                    <option disabled selected>Виберіть день тижня</option>
-                                    <option
-                                        value="Понеділок" {{ old('day_of_week', $daySheet->day_of_week) == 'Понеділок' ? 'selected' : '' }}>
-                                        Понеділок
-                                    </option>
-                                    <option
-                                        value="Вівторок" {{ old('day_of_week', $daySheet->day_of_week) == 'Вівторок' ? 'selected' : '' }}>
-                                        Вівторок
-                                    </option>
-                                    <option
-                                        value="Середа" {{ old('day_of_week', $daySheet->day_of_week) == 'Середа' ? 'selected' : '' }}>
-                                        Середа
-                                    </option>
-                                    <option
-                                        value="Четвер" {{ old('day_of_week', $daySheet->day_of_week) == 'Четвер' ? 'selected' : '' }}>
-                                        Четвер
-                                    </option>
-                                    <option
-                                        value="Пʼятниця" {{ old('day_of_week', $daySheet->day_of_week) == 'Пʼятниця' ? 'selected' : '' }}>
-                                        Пʼятниця
-                                    </option>
-                                    <option
-                                        value="Субота" {{ old('day_of_week', $daySheet->day_of_week) == 'Субота' ? 'selected' : '' }}>
-                                        Субота
-                                    </option>
-                                    <option
-                                        value="Неділя" {{ old('day_of_week', $daySheet->day_of_week) == 'Неділя' ? 'selected' : '' }}>
-                                        Неділя
-                                    </option>
-                                </select>
+                                <label>Дата <span style="color: red;">*</span></label>
+                                <input type="date" name="date"
+                                       class="form-control @error('date') is-invalid @enderror"
+                                       value="{{ old('date', $daySheet->date) }}">
                             </div>
-                            @error('day_of_week')
+                            @error('date')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Час початку <span style="color: red;">*</span></label>
+                                <input type="time" name="start_time"
+                                       class="form-control @error('start_time') is-invalid @enderror"
+                                       value="{{ old('start_time', $daySheet->start_time) }}">
+                            </div>
+                            @error('start_time')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Час закінчення <span style="color: red;">*</span></label>
+                                <input type="time" name="end_time"
+                                       class="form-control @error('end_time') is-invalid @enderror"
+                                       value="{{ old('end_time', $daySheet->end_time) }}">
+                            </div>
+                            @error('end_time')
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 

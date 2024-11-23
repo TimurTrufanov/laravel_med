@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,9 @@ class DaySheet extends Model
     protected $fillable = [
         'doctor_id',
         'clinic_id',
-        'day_of_week'
+        'date',
+        'start_time',
+        'end_time',
     ];
 
     public function doctor(): BelongsTo
@@ -30,5 +33,20 @@ class DaySheet extends Model
     public function timeSheets(): HasMany
     {
         return $this->hasMany(TimeSheet::class);
+    }
+
+    public function getStartTimeAttribute($value): string
+    {
+        return Carbon::parse($value)->format('H:i');
+    }
+
+    public function getEndTimeAttribute($value): string
+    {
+        return Carbon::parse($value)->format('H:i');
+    }
+
+    public function getFormattedDateAttribute()
+    {
+        return Carbon::parse($this->date)->translatedFormat('d F Y');
     }
 }

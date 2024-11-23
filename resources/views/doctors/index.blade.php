@@ -70,7 +70,11 @@
                                                 <td>{{ $doctor->user->first_name }}</td>
                                                 <td>{{ $doctor->user->last_name }}</td>
                                                 <td>{{ $doctor->user->email }}</td>
-                                                <td>{{ $doctor->clinic->name ?? 'Немає' }}</td>
+                                                <td>
+                                                    <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
+                                                        {{ $doctor->clinic->name}}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $doctor->specializations->pluck('name')->implode(', ') }}</td>
                                                 <td><a href="{{ route('doctors.show', $doctor->id) }}"><i
                                                             class="far fa-eye"></i></a></td>

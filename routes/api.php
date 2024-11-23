@@ -19,7 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-
-Route::get('schedule', [CalendarController::class, 'fetchSchedule']);
-Route::post('schedule', [CalendarController::class, 'store']);
+Route::get('calendar', [CalendarController::class, 'fetchSchedule']);
 

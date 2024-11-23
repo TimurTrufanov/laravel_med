@@ -26,25 +26,26 @@
                         <form action="{{ route('day-sheets.store') }}" method="POST" class="w-50">
                             @csrf
                             <div class="form-group">
-                                <label>Лікарі <span style="color: red;">*</span></label>
-                                <select id="doctor_ids" name="doctor_ids[]" multiple
-                                        class="form-control select2 @error('doctor_ids') is-invalid @enderror">
+                                <label>Лікар <span style="color: red;">*</span></label>
+                                <select name="doctor_id" class="form-control @error('doctor_id') is-invalid @enderror">
+                                    <option disabled selected>Виберіть лікаря</option>
                                     @foreach($doctors as $doctor)
                                         <option
-                                            value="{{ $doctor->id }}" {{ collect(old('doctor_ids'))->contains($doctor->id) ? 'selected' : '' }}>
+                                            value="{{ $doctor->id }}"
+                                            {{ old('doctor_id', $selectedDoctorId ?? null) == $doctor->id ? 'selected' : '' }}>
                                             {{ $doctor->user->first_name }} {{ $doctor->user->last_name }}
+                                            ({{ $doctor->user->email }})
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
-                            @error('doctor_ids')
+                            @error('doctor_id')
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 
                             <div class="form-group">
                                 <label>Клініка <span style="color: red;">*</span></label>
-                                <select id="clinic_id" name="clinic_id"
-                                        class="form-control @error('clinic_id') is-invalid @enderror">
+                                <select name="clinic_id" class="form-control @error('clinic_id') is-invalid @enderror">
                                     <option disabled selected>Виберіть клініку</option>
                                     @foreach($clinics as $clinic)
                                         <option
@@ -59,18 +60,31 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>Дні тижня <span style="color: red;">*</span></label>
-                                <select id="days_of_week" name="days_of_week[]" multiple
-                                        class="form-control select2 @error('days_of_week') is-invalid @enderror">
-                                    @foreach(['Понеділок', 'Вівторок', 'Середа', 'Четвер', 'Пʼятниця', 'Субота', 'Неділя'] as $day)
-                                        <option
-                                            value="{{ $day }}" {{ collect(old('days_of_week'))->contains($day) ? 'selected' : '' }}>
-                                            {{ $day }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                                <label>Дата <span style="color: red;">*</span></label>
+                                <input type="date" name="date" class="form-control @error('date') is-invalid @enderror"
+                                       value="{{ old('date', request()->query('date')) }}">
                             </div>
-                            @error('days_of_week')
+                            @error('date')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Час початку <span style="color: red;">*</span></label>
+                                <input type="time" name="start_time"
+                                       class="form-control @error('start_time') is-invalid @enderror"
+                                       value="{{ old('start_time') }}">
+                            </div>
+                            @error('start_time')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Час закінчення <span style="color: red;">*</span></label>
+                                <input type="time" name="end_time"
+                                       class="form-control @error('end_time') is-invalid @enderror"
+                                       value="{{ old('end_time') }}">
+                            </div>
+                            @error('end_time')
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 
@@ -80,5 +94,18 @@
                 </div>
             </div>
         </section>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const urlParams = new URLSearchParams(window.location.search);
+                const date = urlParams.get('date');
+
+                if (date) {
+                    const dateInput = document.getElementById('date');
+                    if (dateInput) {
+                        dateInput.value = date;
+                    }
+                }
+            });
+        </script>
     </div>
 @endsection

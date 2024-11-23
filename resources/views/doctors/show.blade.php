@@ -64,7 +64,7 @@
                                     </tr>
                                     <tr>
                                         <td>Дата народження</td>
-                                        <td>{{ $doctor->user->date_of_birth }}</td>
+                                        <td>{{ $doctor->user->formatted_date_of_birth }}</td>
                                     </tr>
                                     <tr>
                                         <td>Стать</td>
@@ -72,7 +72,11 @@
                                     </tr>
                                     <tr>
                                         <td>Клініка</td>
-                                        <td>{{ $doctor->clinic->name ?? 'Немає' }}</td>
+                                        <td>
+                                            <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
+                                                {{ $doctor->clinic->name}}
+                                            </a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Посада</td>
@@ -96,7 +100,40 @@
                         </div>
                     </div>
                 </div>
-
+                <div class="row mt-4">
+                    <div class="col-6">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h4>Графік днів</h4>
+                            <a href="{{ route('day-sheets.create', ['doctor_id' => $doctor->id]) }}"
+                               class="btn btn-primary">Додати день</a>
+                        </div>
+                        <div class="card">
+                            <div class="card-body table-responsive p-0">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                    <tr>
+                                        <th>Дата</th>
+                                        <th>Час початку</th>
+                                        <th>Час закінчення</th>
+                                        <th>Клініка</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    @foreach($doctor->daySheets as $daySheet)
+                                        <tr onclick="window.location.href='{{ route('day-sheets.edit', $daySheet->id) }}';"
+                                            style="cursor: pointer;">
+                                            <td>{{ $daySheet->formatted_date }}</td>
+                                            <td>{{ $daySheet->start_time }}</td>
+                                            <td>{{ $daySheet->end_time }}</td>
+                                            <td>{{ $daySheet->clinic->name }}</td>
+                                        </tr>
+                                    @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <x-modal id="deleteModal" title="Підтвердження видалення" formId="deleteForm" action="">
                     Ви впевнені, що бажаєте видалити цього лікаря?
                 </x-modal>

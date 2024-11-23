@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -80,8 +81,8 @@ class User extends Authenticatable
         return asset(config('constants.doctor_male_default_avatar'));
     }
 
-    public function getFullNameAttribute(): string
+    public function getFormattedDateOfBirthAttribute()
     {
-        return "{$this->first_name} {$this->last_name}";
+        return Carbon::parse($this->date_of_birth)->translatedFormat('d F Y');
     }
 }

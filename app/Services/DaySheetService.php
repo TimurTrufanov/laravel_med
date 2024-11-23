@@ -3,36 +3,77 @@
 namespace App\Services;
 
 use App\Models\DaySheet;
-use Exception;
+use App\Models\TimeSheet;
 
 class DaySheetService
 {
-    /**
-     * @throws Exception
-     */
-    public function createDaySheets(array $doctorIds, string $clinicId, array $daysOfWeek): array
+    public function getFilteredDaySheets(array $filters)
     {
-        $createdDaySheets = [];
+        $query = DaySheet::with(['doctor.user', 'clinic']);
 
-        foreach ($doctorIds as $doctorId) {
-            foreach ($daysOfWeek as $day) {
-                $existingDaySheet = DaySheet::where('doctor_id', $doctorId)
-                    ->where('clinic_id', $clinicId)
-                    ->where('day_of_week', $day)
-                    ->first();
-
-                if ($existingDaySheet) {
-                    throw new Exception("Розклад для лікаря на {$day} вже існує.");
-                }
-
-                $createdDaySheets[] = DaySheet::create([
-                    'doctor_id' => $doctorId,
-                    'clinic_id' => $clinicId,
-                    'day_of_week' => $day,
-                ]);
-            }
+        if (!empty($filters['search'])) {
+            $query->whereHas('doctor.user', function ($q) use ($filters) {
+                $q->where('first_name', 'like', "%{$filters['search']}%")
+                    ->orWhere('last_name', 'like', "%{$filters['search']}%");
+            })->orWhereHas('clinic', function ($q) use ($filters) {
+                $q->where('name', 'like', "%{$filters['search']}%");
+            });
         }
 
-        return $createdDaySheets;
+        return $query->orderBy('created_at', 'desc')->paginate(10);
+    }
+
+    public function saveDaySheet(array $data, ?DaySheet $daySheet = null): void
+    {
+        $daySheet = $daySheet ?? new DaySheet();
+        $daySheet->fill($data);
+        $daySheet->save();
+
+        $this->generateTimeSheets($daySheet);
+    }
+
+    public function deleteDaySheet(DaySheet $daySheet): void
+    {
+        $daySheet->timeSheets()->delete();
+        $daySheet->delete();
+    }
+
+    private function generateTimeSheets(DaySheet $daySheet): void
+    {
+        $appointmentDuration = $daySheet->doctor->appointment_duration;
+        $startTime = strtotime($daySheet->start_time);
+        $endTime = strtotime($daySheet->end_time);
+
+        $breaks = [
+            ['start' => '12:00', 'end' => '13:00'],
+            ['start' => '17:00', 'end' => '18:00'],
+        ];
+
+        TimeSheet::where('day_sheet_id', $daySheet->id)->delete();
+
+        while ($startTime < $endTime) {
+            $currentTime = date('H:i', $startTime);
+
+            foreach ($breaks as $break) {
+                if ($currentTime >= $break['start'] && $currentTime < $break['end']) {
+                    $startTime = strtotime($break['end']);
+                    continue 2;
+                }
+            }
+
+            $nextTime = date('H:i', strtotime("+{$appointmentDuration} minutes", $startTime));
+
+            if (strtotime($nextTime) > $endTime) {
+                break;
+            }
+
+            TimeSheet::create([
+                'day_sheet_id' => $daySheet->id,
+                'start_time' => $currentTime,
+                'end_time' => $nextTime,
+            ]);
+
+            $startTime = strtotime("+{$appointmentDuration} minutes", $startTime);
+        }
     }
 }

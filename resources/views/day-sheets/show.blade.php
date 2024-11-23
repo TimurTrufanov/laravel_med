@@ -5,7 +5,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6 d-flex align-items-center">
-                        <h1 class="m-0 mr-2">Розклад на {{ $daySheet->day_of_week }}</h1>
+                        <h1 class="m-0 mr-2">Розклад на {{ $daySheet->date }}</h1>
                         <a href="{{ route('day-sheets.edit', $daySheet->id) }}" class="text-success mr-2"><i
                                 class="fas fa-pencil-alt"></i></a>
                         <button class="border-0 bg-transparent"
@@ -17,7 +17,7 @@
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('main.index') }}">Головна</a></li>
                             <li class="breadcrumb-item"><a href="{{ route('day-sheets.index') }}">Розклади</a></li>
-                            <li class="breadcrumb-item active">Розклад на {{ $daySheet->day_of_week }}</li>
+                            <li class="breadcrumb-item active">Розклад на {{ $daySheet->date }}</li>
                         </ol>
                     </div>
                 </div>
@@ -38,15 +38,33 @@
                                     </tr>
                                     <tr>
                                         <td>Лікар</td>
-                                        <td>{{ $daySheet->doctor->user->first_name }} {{ $daySheet->doctor->user->last_name }}</td>
+                                        <td>
+                                            <a href="{{ route('doctors.show', $daySheet->doctor->id) }}">
+                                                {{ $daySheet->doctor->user->first_name }}
+                                                {{ $daySheet->doctor->user->last_name }}
+                                                ({{ $daySheet->doctor->user->email }})
+                                            </a>
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>Клініка</td>
-                                        <td>{{ $daySheet->clinic->name }}</td>
+                                        <td>
+                                            <a href="{{ route('clinics.show', $daySheet->clinic->id) }}">
+                                                {{ $daySheet->clinic->name }}
+                                            </a>
+                                        </td>
                                     </tr>
                                     <tr>
-                                        <td>День тижня</td>
-                                        <td>{{ $daySheet->day_of_week }}</td>
+                                        <td>Дата</td>
+                                        <td>{{ $daySheet->formatted_date }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Час початку</td>
+                                        <td>{{ $daySheet->start_time }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Час закінчення</td>
+                                        <td>{{ $daySheet->end_time }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

@@ -9,7 +9,6 @@ use App\Http\Controllers\DoctorController;
 use App\Http\Controllers\Main\IndexController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\SpecializationController;
-use App\Http\Controllers\TimeSheetController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +30,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('services', ServiceController::class);
     Route::resource('doctors', DoctorController::class);
     Route::resource('day-sheets', DaySheetController::class);
-    Route::resource('time-sheets', TimeSheetController::class);
 
     Route::get('calendar', [CalendarController::class, 'index'])->name('calendar.index');
 });

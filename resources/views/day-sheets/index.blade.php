@@ -24,9 +24,10 @@
                         <a href="{{ route('day-sheets.create') }}" class="btn btn-block btn-primary">Додати</a>
                     </div>
 
-                    <form action="{{ route('day-sheets.index') }}" method="GET">
+                    <form action="{{ route('day-sheets.index') }}" method="GET" class="col-md-10">
                         <div class="input-group">
-                            <input type="search" name="search" class="form-control" placeholder="Пошук за лікарем або клінікою"
+                            <input type="search" name="search" class="form-control"
+                                   placeholder="Пошук за лікарем або клінікою"
                                    style="border-top-right-radius: 0; border-bottom-right-radius: 0"
                                    value="{{ request()->query('search') }}">
                             <button type="submit" class="btn btn-primary"
@@ -52,7 +53,9 @@
                                             <th>ID</th>
                                             <th>Лікар</th>
                                             <th>Клініка</th>
-                                            <th>День тижня</th>
+                                            <th>Дата</th>
+                                            <th>Час початку</th>
+                                            <th>Час закінчення</th>
                                             <th colspan="3">Дія</th>
                                         </tr>
                                         </thead>
@@ -60,9 +63,21 @@
                                         @foreach($daySheets as $daySheet)
                                             <tr>
                                                 <td>{{ $daySheet->id }}</td>
-                                                <td>{{ $daySheet->doctor->user->first_name }} {{ $daySheet->doctor->user->last_name }}</td>
-                                                <td>{{ $daySheet->clinic->name }}</td>
-                                                <td>{{ $daySheet->day_of_week }}</td>
+                                                <td>
+                                                    <a href="{{ route('doctors.show', $daySheet->doctor->id) }}">
+                                                        {{ $daySheet->doctor->user->first_name }}
+                                                        {{ $daySheet->doctor->user->last_name }}
+                                                        ({{ $daySheet->doctor->user->email }})
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    <a href="{{ route('clinics.show', $daySheet->clinic->id) }}">
+                                                        {{ $daySheet->clinic->name }}
+                                                    </a>
+                                                </td>
+                                                <td>{{ $daySheet->formatted_date }}</td>
+                                                <td>{{ $daySheet->start_time }}</td>
+                                                <td>{{ $daySheet->end_time }}</td>
                                                 <td><a href="{{ route('day-sheets.show', $daySheet->id) }}"><i
                                                             class="far fa-eye"></i></a></td>
                                                 <td><a href="{{ route('day-sheets.edit', $daySheet->id) }}"
