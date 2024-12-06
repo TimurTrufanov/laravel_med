@@ -13,12 +13,12 @@ class CheckDaySheetOverlap implements ValidationRule
      *
      * @param \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
      */
-    protected int $doctorId;
-    protected string $startTime;
-    protected string $endTime;
+    protected ?int $doctorId;
+    protected ?string $startTime;
+    protected ?string $endTime;
     protected ?int $daySheetId;
 
-    public function __construct(int $doctorId, string $startTime, string $endTime, ?int $daySheetId = null)
+    public function __construct(?int $doctorId, ?string $startTime, ?string $endTime, ?int $daySheetId = null)
     {
         $this->doctorId = $doctorId;
         $this->startTime = $startTime;
@@ -28,6 +28,10 @@ class CheckDaySheetOverlap implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
+        if ($this->doctorId === null || $this->startTime === null || $this->endTime === null) {
+            return;
+        }
+
         $overlapExists = DaySheet::where('doctor_id', $this->doctorId)
             ->where('date', $value)
             ->where(function ($query) {

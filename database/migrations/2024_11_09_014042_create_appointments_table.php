@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
             $table->foreignId('time_sheet_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignId('doctor_id')->nullable()->constrained()->onDelete('cascade');
             $table->date('appointment_date');
             $table->enum('status', ['заплановано', 'завершено', 'скасовано'])->default('заплановано');

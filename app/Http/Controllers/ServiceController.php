@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ServiceRequest;
 use App\Models\Service;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 
 class ServiceController extends Controller
@@ -19,7 +20,7 @@ class ServiceController extends Controller
             return redirect()->route('services.index');
         }
 
-        $query = Service::query();
+        $query = Service::with('specialization');
 
         if (!empty($search)) {
             $query->where('name', 'like', "%{$search}%");
@@ -35,7 +36,8 @@ class ServiceController extends Controller
      */
     public function create()
     {
-        return view('services.create');
+        $specializations = Specialization::all();
+        return view('services.create', compact('specializations'));
     }
 
     /**
@@ -60,7 +62,8 @@ class ServiceController extends Controller
      */
     public function edit(Service $service)
     {
-        return view('services.edit', compact('service'));
+        $specializations = Specialization::all();
+        return view('services.edit', compact('service', 'specializations'));
     }
 
     /**

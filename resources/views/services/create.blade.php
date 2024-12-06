@@ -50,10 +50,28 @@
 
                             <div class="form-group">
                                 <label>Ціна <span style="color: red;">*</span></label>
-                                <input type="text" class="form-control @error('price') is-invalid @enderror" name="price"
+                                <input type="text" class="form-control @error('price') is-invalid @enderror"
+                                       name="price"
                                        placeholder="Ціна" value="{{ old('price') }}">
                             </div>
                             @error('price')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Спеціалізація <span style="color: red;">*</span></label>
+                                <select name="specialization_id"
+                                        class="form-control @error('specialization_id') is-invalid @enderror">
+                                    <option disabled selected>Оберіть спеціалізацію</option>
+                                    @foreach($specializations as $specialization)
+                                        <option value="{{ $specialization->id }}"
+                                            {{ old('specialization_id') == $specialization->id ? 'selected' : '' }}>
+                                            {{ $specialization->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('specialization_id')
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 

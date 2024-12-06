@@ -122,8 +122,9 @@
 
                             <div class="form-group">
                                 <label>Клініка <span style="color: red;">*</span></label>
-                                <select name="clinic_id" class="form-control @error('clinic_id') is-invalid @enderror">
-                                    <option disabled selected>Виберіть клініку</option>
+                                <select id="clinic_id" name="clinic_id"
+                                        class="form-control @error('clinic_id') is-invalid @enderror">
+                                    <option disabled selected value="">Виберіть клініку</option>
                                     @foreach($clinics as $clinic)
                                         <option
                                             value="{{ $clinic->id }}" {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}>
@@ -133,6 +134,23 @@
                                 </select>
                             </div>
                             @error('clinic_id')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
+                            <div class="form-group">
+                                <label>Спеціалізації</label>
+                                <select id="specializations" name="specializations[]" multiple="multiple"
+                                        class="form-control select2 @error('specializations') is-invalid @enderror"
+                                        data-placeholder="Виберіть спеціалізації">
+                                    @foreach($specializations as $specialization)
+                                        <option value="{{ $specialization->id }}"
+                                            {{ collect(old('specializations'))->contains($specialization->id) ? 'selected' : '' }}>
+                                            {{ $specialization->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('specializations')
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 
@@ -157,7 +175,7 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>Тривалість прийому (хвилини)</label>
+                                <label>Тривалість прийому (хвилини) <span style="color: red;">*</span></label>
                                 <input type="number"
                                        class="form-control @error('appointment_duration') is-invalid @enderror"
                                        name="appointment_duration" placeholder="Тривалість прийому"
@@ -167,28 +185,58 @@
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 
-                            <div class="form-group">
-                                <label>Спеціалізації</label>
-                                <select name="specializations[]" multiple="multiple"
-                                        class="form-control select2 @error('specializations') is-invalid @enderror"
-                                        data-placeholder="Виберіть спеціалізації">
-                                    @foreach($specializations as $specialization)
-                                        <option value="{{ $specialization->id }}"
-                                            {{ collect(old('specializations'))->contains($specialization->id) ? 'selected' : '' }}>
-                                            {{ $specialization->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('specializations')
-                            <div class="text-danger mb-3">{{ $message }}</div>
-                            @enderror
-
                             <input type="submit" class="btn btn-primary mb-4" value="Додати">
                         </form>
                     </div>
                 </div>
             </div>
         </section>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const clinicSelect = document.getElementById('clinic_id');
+                const specializationSelect = document.getElementById('specializations');
+
+                clinicSelect.addEventListener('change', function () {
+                    const clinicId = clinicSelect.value;
+
+                    if (clinicId === "") {
+                        return;
+                    }
+
+                    const selectedSpecializations = Array.from(specializationSelect.selectedOptions)
+                        .map(option => option.value);
+
+                    fetch(`{{ route('doctors.getSpecializationsByClinic') }}?clinic_id=${clinicId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.error) {
+                                alert(data.error);
+                                return;
+                            }
+
+                            specializationSelect.innerHTML = '';
+
+                            data.forEach(specialization => {
+                                const option = document.createElement('option');
+                                option.value = specialization.id;
+                                option.textContent = specialization.name;
+
+                                if (selectedSpecializations.includes(specialization.id.toString())) {
+                                    option.selected = true;
+                                }
+
+                                specializationSelect.appendChild(option);
+                            });
+                        })
+                        .catch(error => {
+                            console.error('Ошибка при загрузке специализаций:', error);
+                        });
+                });
+
+                if (clinicSelect.value !== "") {
+                    clinicSelect.dispatchEvent(new Event('change'));
+                }
+            });
+        </script>
     </div>
 @endsection

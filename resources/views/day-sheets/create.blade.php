@@ -44,22 +44,6 @@
                             @enderror
 
                             <div class="form-group">
-                                <label>Клініка <span style="color: red;">*</span></label>
-                                <select name="clinic_id" class="form-control @error('clinic_id') is-invalid @enderror">
-                                    <option disabled selected>Виберіть клініку</option>
-                                    @foreach($clinics as $clinic)
-                                        <option
-                                            value="{{ $clinic->id }}" {{ old('clinic_id') == $clinic->id ? 'selected' : '' }}>
-                                            {{ $clinic->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('clinic_id')
-                            <div class="text-danger mb-3">{{ $message }}</div>
-                            @enderror
-
-                            <div class="form-group">
                                 <label>Дата <span style="color: red;">*</span></label>
                                 <input type="date" name="date" class="form-control @error('date') is-invalid @enderror"
                                        value="{{ old('date', request()->query('date')) }}">

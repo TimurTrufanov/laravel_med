@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('price', 8, 2)->unsigned();;
+            $table->decimal('price', 8, 2)->unsigned();
+            $table->foreignId('specialization_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }

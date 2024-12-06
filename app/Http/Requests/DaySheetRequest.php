@@ -30,7 +30,6 @@ class DaySheetRequest extends FormRequest
 
         return [
             'doctor_id' => 'required|exists:doctors,id',
-            'clinic_id' => 'required|exists:clinics,id',
             'date' => [
                 'required',
                 'date',

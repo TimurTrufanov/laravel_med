@@ -29,4 +29,9 @@ class Specialization extends Model
     {
         return $this->hasMany(Card::class);
     }
+
+    public function services()
+    {
+        return $this->hasMany(Service::class);
+    }
 }

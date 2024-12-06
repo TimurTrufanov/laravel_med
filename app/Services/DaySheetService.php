@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\DaySheet;
+use App\Models\Doctor;
 use App\Models\TimeSheet;
 
 class DaySheetService
@@ -26,11 +27,16 @@ class DaySheetService
     public function saveDaySheet(array $data, ?DaySheet $daySheet = null): void
     {
         $daySheet = $daySheet ?? new DaySheet();
+
+        $doctor = Doctor::findOrFail($data['doctor_id']);
+        $data['clinic_id'] = $doctor->clinic_id;
+
         $daySheet->fill($data);
         $daySheet->save();
 
         $this->generateTimeSheets($daySheet);
     }
+
 
     public function deleteDaySheet(DaySheet $daySheet): void
     {

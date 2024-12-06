@@ -33,7 +33,7 @@ class DoctorRequest extends FormRequest
             'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
 
             'clinic_id' => 'required|exists:clinics,id',
-            'appointment_duration' => 'nullable|integer|min:5|max:60|multiple_of:5',
+            'appointment_duration' => 'required|integer|min:5|max:60|multiple_of:5',
             'position' => 'required|string|max:255',
             'bio' => 'required|string|max:5000',
 
@@ -77,6 +77,7 @@ class DoctorRequest extends FormRequest
             'clinic_id.required' => 'Клініка є обов\'язковою.',
             'clinic_id.exists' => 'Обрана клініка не існує.',
 
+            'appointment_duration.required' => 'Тривалість прийому є обов\'язковою.',
             'appointment_duration.integer' => 'Тривалість прийому повинна бути цілим числом.',
             'appointment_duration.min' => 'Тривалість прийому не може бути меншою за 5 хвилин.',
             'appointment_duration.max' => 'Тривалість прийому не може перевищувати 60 хвилин.',

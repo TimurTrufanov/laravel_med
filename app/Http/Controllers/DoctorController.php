@@ -99,4 +99,18 @@ class DoctorController extends Controller
 
         return redirect()->route('doctors.index');
     }
+
+    public function getSpecializationsByClinic(Request $request)
+    {
+        $clinicId = $request->input('clinic_id');
+        $clinic = Clinic::find($clinicId);
+
+        if (!$clinic) {
+            return response()->json(['error' => 'Клиника не найдена'], 404);
+        }
+
+        $specializations = $clinic->specializations;
+
+        return response()->json($specializations);
+    }
 }

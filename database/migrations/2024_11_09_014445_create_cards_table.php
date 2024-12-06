@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained()->onDelete('cascade');
             $table->foreignId('specialization_id')->nullable()->constrained()->onDelete('set null');
-            $table->string('card_type')->nullable();
-            $table->text('description')->nullable();
             $table->timestamps();
         });
     }

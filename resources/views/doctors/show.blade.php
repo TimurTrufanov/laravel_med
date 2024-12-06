@@ -73,9 +73,13 @@
                                     <tr>
                                         <td>Клініка</td>
                                         <td>
-                                            <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
-                                                {{ $doctor->clinic->name}}
-                                            </a>
+                                            @if ($doctor->clinic)
+                                                <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
+                                                    {{ $doctor->clinic->name }}
+                                                </a>
+                                            @else
+                                                <span class="text-muted">Клініка не призначена</span>
+                                            @endif
                                         </td>
                                     </tr>
                                     <tr>

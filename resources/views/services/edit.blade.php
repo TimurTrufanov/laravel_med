@@ -56,6 +56,23 @@
                             <div class="text-danger mb-3">{{ $message }}</div>
                             @enderror
 
+                            <div class="form-group">
+                                <label>Спеціалізація <span style="color: red;">*</span></label>
+                                <select name="specialization_id"
+                                        class="form-control @error('specialization_id') is-invalid @enderror">
+                                    <option disabled selected>Оберіть спеціалізацію</option>
+                                    @foreach($specializations as $specialization)
+                                        <option value="{{ $specialization->id }}"
+                                            {{ old('specialization_id', $service->specialization_id) == $specialization->id ? 'selected' : '' }}>
+                                            {{ $specialization->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('specialization_id')
+                            <div class="text-danger mb-3">{{ $message }}</div>
+                            @enderror
+
                             <input type="submit" class="btn btn-primary" value="Оновити">
                         </form>
                     </div>

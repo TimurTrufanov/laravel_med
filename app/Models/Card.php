@@ -14,8 +14,6 @@ class Card extends Model
     protected $fillable = [
         'patient_id',
         'specialization_id',
-        'card_type',
-        'description'
     ];
 
     public function patient(): BelongsTo

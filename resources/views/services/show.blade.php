@@ -50,6 +50,10 @@
                                         <td>Ціна</td>
                                         <td>{{ $service->price }}</td>
                                     </tr>
+                                    <tr>
+                                        <td>Спеціалізація</td>
+                                        <td>{{ $service->specialization->name }}</td>
+                                    </tr>
                                     </tbody>
                                 </table>
                             </div>

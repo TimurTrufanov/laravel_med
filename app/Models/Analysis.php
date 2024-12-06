@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Analysis extends Model
 {
@@ -16,8 +16,8 @@ class Analysis extends Model
         'price'
     ];
 
-    public function appointments(): BelongsToMany
+    public function appointmentAnalyses(): HasMany
     {
-        return $this->belongsToMany(Appointment::class)->withPivot('status');
+        return $this->hasMany(AppointmentAnalysis::class);
     }
 }

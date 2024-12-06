@@ -15,8 +15,14 @@ class Appointment extends Model
     protected $fillable = [
         'patient_id',
         'time_sheet_id',
+        'service_id',
+        'doctor_id',
         'appointment_date',
         'status'
+    ];
+
+    protected $casts = [
+        'appointment_date' => 'date',
     ];
 
     public function patient(): BelongsTo
@@ -29,19 +35,24 @@ class Appointment extends Model
         return $this->belongsTo(Doctor::class);
     }
 
+    public function service(): BelongsTo
+    {
+        return $this->belongsTo(Service::class);
+    }
+
     public function timeSheet(): BelongsTo
     {
         return $this->belongsTo(TimeSheet::class);
     }
 
-    public function analyses(): BelongsToMany
+    public function appointmentAnalyses(): HasMany
     {
-        return $this->belongsToMany(Analysis::class)->withPivot('status');
+        return $this->hasMany(AppointmentAnalysis::class);
     }
 
-    public function services(): BelongsToMany
+    public function appointmentServices(): HasMany
     {
-        return $this->belongsToMany(Service::class);
+        return $this->hasMany(AppointmentService::class);
     }
 
     public function cardRecords(): HasMany

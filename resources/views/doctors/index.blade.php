@@ -71,9 +71,13 @@
                                                 <td>{{ $doctor->user->last_name }}</td>
                                                 <td>{{ $doctor->user->email }}</td>
                                                 <td>
-                                                    <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
-                                                        {{ $doctor->clinic->name}}
-                                                    </a>
+                                                    @if ($doctor->clinic)
+                                                        <a href="{{ route('clinics.show', $doctor->clinic->id) }}">
+                                                            {{ $doctor->clinic->name }}
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted">Клініка не призначена</span>
+                                                    @endif
                                                 </td>
                                                 <td>{{ $doctor->specializations->pluck('name')->implode(', ') }}</td>
                                                 <td><a href="{{ route('doctors.show', $doctor->id) }}"><i

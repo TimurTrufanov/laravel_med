@@ -54,6 +54,7 @@
                                             <th>Назва</th>
                                             <th>Опис</th>
                                             <th>Ціна</th>
+                                            <th>Спеціалізація</th>
                                             <th colspan="3">Дія</th>
                                         </tr>
                                         </thead>
@@ -66,6 +67,7 @@
                                                     {{ $service->description }}
                                                 </td>
                                                 <td>{{ $service->price }}</td>
+                                                <td>{{ $service->specialization->name }}</td>
                                                 <td><a href="{{ route('services.show', $service->id) }}"><i
                                                             class="far fa-eye"></i></a></td>
                                                 <td><a href="{{ route('services.edit', $service->id) }}"

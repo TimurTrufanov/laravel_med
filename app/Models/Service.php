@@ -4,7 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Service extends Model
 {
@@ -13,11 +14,17 @@ class Service extends Model
     protected $fillable = [
         'name',
         'description',
-        'price'
+        'price',
+        'specialization_id'
     ];
 
-    public function appointments(): BelongsToMany
+    public function appointmentServices(): HasMany
     {
-        return $this->belongsToMany(Appointment::class);
+        return $this->hasMany(AppointmentService::class);
+    }
+
+    public function specialization(): BelongsTo
+    {
+        return $this->belongsTo(Specialization::class);
     }
 }

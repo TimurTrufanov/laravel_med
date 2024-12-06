@@ -26,6 +26,7 @@ class ServiceRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:5000',
             'price' => 'required|numeric|min:0|max:999999.99|regex:/^\d+(\.\d{1,2})?$/',
+            'specialization_id' => 'required|exists:specializations,id',
         ];
     }
 
@@ -42,6 +43,8 @@ class ServiceRequest extends FormRequest
             'price.min' => 'Ціна не може бути меншою за 0.',
             'price.max' => 'Ціна не може перевищувати 999999.99.',
             'price.regex' => 'Ціна може містити не більше двох знаків після коми.',
+            'specialization_id.required' => 'Спеціалізація є обов\'язковою.',
+            'specialization_id.exists' => 'Обрана спеціалізація не існує.',
         ];
     }
 }

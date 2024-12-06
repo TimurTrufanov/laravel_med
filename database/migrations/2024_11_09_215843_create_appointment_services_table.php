@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('analysis_appointment', function (Blueprint $table) {
+        Schema::create('appointment_services', function (Blueprint $table) {
             $table->id();
             $table->foreignId('appointment_id')->constrained()->onDelete('cascade');
-            $table->foreignId('analysis_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_id')->constrained()->onDelete('cascade');
             $table->decimal('price', 8, 2)->unsigned();
             $table->unsignedSmallInteger('quantity')->unsigned();
             $table->decimal('total_price', 9, 2)->unsigned();
-            $table->enum('status', ['призначений', 'завершений'])->default('призначений');
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('analysis_appointment');
+        Schema::dropIfExists('appointment_services');
     }
 };

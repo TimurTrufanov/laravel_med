@@ -67,7 +67,9 @@ class DaySheetController extends Controller
         $doctors = Doctor::with('user')->get();
         $clinics = Clinic::all();
 
-        return view('day-sheets.edit', compact('daySheet', 'doctors', 'clinics'));
+        $hasAppointments = $daySheet->timeSheets()->whereHas('appointments')->exists();
+
+        return view('day-sheets.edit', compact('daySheet', 'doctors', 'clinics', 'hasAppointments'));
     }
 
     /**

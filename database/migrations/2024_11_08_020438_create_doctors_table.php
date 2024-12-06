@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('clinic_id')->nullable()->constrained()->onDelete('set null');
-            $table->unsignedSmallInteger('appointment_duration')->nullable();
+            $table->unsignedSmallInteger('appointment_duration');
             $table->string('position');
             $table->text('bio');
             $table->timestamps();
