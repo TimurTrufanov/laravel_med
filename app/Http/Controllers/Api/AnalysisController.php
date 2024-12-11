@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class AnalysisController extends Controller
 {
-    public function getAnalyses()
+    public function index()
     {
         $analyses = Analysis::all(['id', 'name', 'price']);
         return response()->json($analyses);

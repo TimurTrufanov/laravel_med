@@ -3,6 +3,10 @@
 namespace App\Providers;
 
 // use Illuminate\Support\Facades\Gate;
+use App\Models\Appointment;
+use App\Models\DaySheet;
+use App\Policies\Doctor\AppointmentPolicy;
+use App\Policies\Doctor\DaySheetPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -13,8 +17,8 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        \App\Models\Patient::class => \App\Policies\Doctor\PatientPolicy::class,
-        \App\Models\DaySheet::class => \App\Policies\Doctor\DaySheetPolicy::class,
+        DaySheet::class => DaySheetPolicy::class,
+        Appointment::class => AppointmentPolicy::class,
     ];
 
     /**

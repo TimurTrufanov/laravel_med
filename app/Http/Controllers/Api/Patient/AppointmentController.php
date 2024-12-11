@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Patient;
 use App\Events\AppointmentBooked;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Patient\AppointmentRequest;
+use App\Jobs\Patient\SendAppointmentMail;
 use App\Models\Appointment;
 use App\Models\TimeSheet;
 
@@ -31,6 +32,8 @@ class AppointmentController extends Controller
         $timeSheet->update(['is_active' => false]);
 
         broadcast(new AppointmentBooked($timeSheet->id, $appointment))->toOthers();
+
+        SendAppointmentMail::dispatch($request->user()->email, $appointment);
 
         return response()->json(['message' => 'Ви успішно записались на прийом', 'appointment' => $appointment], 201);
     }

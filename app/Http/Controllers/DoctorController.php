@@ -61,8 +61,6 @@ class DoctorController extends Controller
         },]);
 
         return view('doctors.show', compact('doctor'));
-
-
     }
 
     /**

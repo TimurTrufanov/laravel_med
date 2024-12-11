@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class DiagnosisController extends Controller
 {
-    public function getDiagnoses()
+    public function index()
     {
         $diagnoses = Diagnosis::all(['id', 'name']);
         return response()->json($diagnoses);

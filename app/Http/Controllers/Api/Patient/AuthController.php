@@ -48,7 +48,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return new DetailedResource($patient->load(['appointments']));
+        return DetailedResource::make($patient->load(['appointments']))->resolve();
     }
 
     public function logout(Request $request)

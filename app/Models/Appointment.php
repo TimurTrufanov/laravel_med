@@ -59,4 +59,9 @@ class Appointment extends Model
     {
         return $this->hasMany(CardRecord::class);
     }
+
+    public function isToday(): bool
+    {
+        return $this->timeSheet->daySheet->date === now()->format('Y-m-d');
+    }
 }

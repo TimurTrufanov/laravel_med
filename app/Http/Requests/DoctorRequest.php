@@ -30,7 +30,7 @@ class DoctorRequest extends FormRequest
             'gender' => 'nullable|string|in:чоловічий,жіночий',
             'address' => 'nullable|string|max:255',
             'phone_number' => 'nullable|string|size:10|regex:/^\d{10}$/',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:10240',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
 
             'clinic_id' => 'required|exists:clinics,id',
             'appointment_duration' => 'required|integer|min:5|max:60|multiple_of:5',
@@ -72,7 +72,7 @@ class DoctorRequest extends FormRequest
 
             'photo.image' => 'Файл повинен бути зображенням.',
             'photo.mimes' => 'Допустимі формати зображень: jpeg, png, jpg.',
-            'photo.max' => 'Розмір файлу не повинен перевищувати 10 МБ.',
+            'photo.max' => 'Розмір файлу не повинен перевищувати 2 МБ.',
 
             'clinic_id.required' => 'Клініка є обов\'язковою.',
             'clinic_id.exists' => 'Обрана клініка не існує.',

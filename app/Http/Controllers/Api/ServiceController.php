@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
-    public function getServices()
+    public function index()
     {
         $services = Service::all(['id', 'name', 'price']);
         return response()->json($services);

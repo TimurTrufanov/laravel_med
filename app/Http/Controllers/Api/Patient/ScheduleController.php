@@ -1,32 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Doctor\DayScheduleResource;
 use App\Models\DaySheet;
-use App\Services\ScheduleService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
 
 class ScheduleController extends Controller
 {
-    protected $scheduleService;
-
-    public function __construct(ScheduleService $scheduleService)
-    {
-        $this->scheduleService = $scheduleService;
-    }
-
-    public function getSchedule(Request $request)
-    {
-        $doctor = $request->user()->doctor;
-        $schedule = $this->scheduleService->getDoctorSchedule($doctor->id);
-
-        return response()->json($schedule, 200);
-    }
-
     public function getAvailableSchedule(Request $request)
     {
         $query = DaySheet::with(['timeSheets', 'doctor.user', 'doctor.specializations', 'clinic'])
@@ -115,20 +97,5 @@ class ScheduleController extends Controller
                 ];
             })->values(),
         ]);
-    }
-
-    public function getDayScheduleWithAppointments($dayId)
-    {
-        $doctor = request()->user()->doctor;
-
-        $daySheet = DaySheet::with(['timeSheets.appointments.patient.user', 'timeSheets.appointments.service'])
-            ->where('doctor_id', $doctor->id)
-            ->find($dayId);
-
-        if (!$daySheet) {
-            return response()->json(['message' => 'Розклад не знайдено'], 404);
-        }
-
-        return new DayScheduleResource($daySheet);
     }
 }

@@ -33,7 +33,7 @@ class AuthController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return new DetailedResource($doctor->load(['clinic', 'specializations']));
+        return DetailedResource::make($doctor->load(['clinic', 'specializations']))->resolve();
     }
 
 
