@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Patient\UploadAnalysisFileRequest;
-use App\Http\Resources\Patient\AppointmentAnalysisResource;
+use App\Http\Resources\AppointmentAnalysisResource;
 use App\Models\AppointmentAnalysis;
 use Illuminate\Http\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources\Patient;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -17,7 +17,7 @@ class AppointmentAnalysisResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'analysis_name' => $this->analysis->name,
+            'name' => $this->analysis->name,
             'appointment_date' => $this->appointment_date->format('Y-m-d'),
             'recommended_date' => $this->recommended_date?->format('Y-m-d'),
             'price' => $this->price,

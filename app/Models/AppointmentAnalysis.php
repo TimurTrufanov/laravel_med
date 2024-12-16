@@ -38,9 +38,4 @@ class AppointmentAnalysis extends Model
     {
         return $this->belongsTo(Appointment::class);
     }
-
-    public function scopeWithStatus($query, $status)
-    {
-        return $query->where('status', $status);
-    }
 }

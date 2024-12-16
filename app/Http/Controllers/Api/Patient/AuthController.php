@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Api\Patient;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Patient\LoginRequest;
 use App\Http\Requests\Api\Patient\RegisterRequest;
-use App\Http\Resources\Patient\DetailedResource;
-use App\Models\User;
 use App\Models\Patient;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,7 +17,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password) || !$user->patient) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Невірні дані для входу'], 401);
         }
 
         $token = $user->createToken('patient-token')->plainTextToken;
@@ -30,7 +29,7 @@ class AuthController extends Controller
     {
         $user = User::create(array_merge(
             $request->validated(),
-            ['password' => Hash::make($request->password)]
+            ['password' => Hash::make($request->password), 'role_id' => 1]
         ));
 
         Patient::create(['user_id' => $user->id]);
@@ -38,17 +37,6 @@ class AuthController extends Controller
         $token = $user->createToken('patient-token')->plainTextToken;
 
         return response()->json(['token' => $token], 201);
-    }
-
-    public function getDetails(Request $request)
-    {
-        $patient = $request->user()->patient;
-
-        if (!$patient) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        return DetailedResource::make($patient->load(['appointments']))->resolve();
     }
 
     public function logout(Request $request)

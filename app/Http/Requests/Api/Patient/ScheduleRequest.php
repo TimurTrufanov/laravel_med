@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Api\Doctor;
+namespace App\Http\Requests\Api\Patient;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class LoginRequest extends FormRequest
+class ScheduleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'password' => 'required|string|min:8',
+            'clinic' => 'nullable|exists:clinics,id',
+            'specialization' => 'nullable|exists:specializations,id',
+            'service' => 'nullable|exists:services,id',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'Введіть email',
-            'email.email' => 'Введіть дійсну адресу електронної пошти.',
-            'password.required' => 'Введіть пароль',
-            'password.min' => 'Пароль повинен містити щонайменше 16 символів.',
+            'clinic.exists' => 'Вказана клініка не існує.',
+            'specialization.exists' => 'Вказана спеціалізація не існує.',
+            'service.exists' => 'Вказана послуга не існує.',
         ];
     }
 }

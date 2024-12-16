@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class DoctorMiddleware
@@ -15,10 +16,11 @@ class DoctorMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->user() && auth()->user()->role->name === 'доктор') {
+        if (Gate::allows('is-doctor', $request->user())) {
             return $next($request);
         }
 
-        return response()->json(['message' => 'Unauthorized'], 403);
+        return response()->json(['message' => 'Доступ заблоковано'], 403);
     }
+
 }

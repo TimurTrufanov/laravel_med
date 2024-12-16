@@ -3,99 +3,33 @@
 namespace App\Http\Controllers\Api\Patient;
 
 use App\Http\Controllers\Controller;
-use App\Models\DaySheet;
-use Carbon\Carbon;
+use App\Http\Requests\Api\Patient\ScheduleRequest;
+use App\Http\Resources\ScheduleResource;
+use App\Http\Resources\TimeSheetResource;
+use App\Services\ScheduleService;
 use Illuminate\Http\Request;
 
 class ScheduleController extends Controller
 {
-    public function getAvailableSchedule(Request $request)
+    public function getAvailableSchedule(ScheduleRequest $request, ScheduleService $scheduleService)
     {
-        $query = DaySheet::with(['timeSheets', 'doctor.user', 'doctor.specializations', 'clinic'])
-            ->whereHas('timeSheets', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->where(function ($query) {
-                $query->where('date', '>', now()->toDateString())
-                    ->orWhere(function ($query) {
-                        $query->where('date', now()->toDateString())
-                            ->where('end_time', '>', now()->format('H:i'));
-                    });
-            });
+        $filters = $request->validated();
+        $schedules = $scheduleService->getAvailableSchedule($filters);
 
-        if ($request->filled('clinic')) {
-            $query->where('day_sheets.clinic_id', $request->clinic);
-        }
-
-        if ($request->filled('specialization')) {
-            $query->whereHas('doctor.specializations', function ($query) use ($request) {
-                $query->where('specializations.id', $request->specialization);
-            });
-        }
-
-        if ($request->filled('service')) {
-            $query->whereHas('doctor.specializations.services', function ($query) use ($request) {
-                $query->where('services.id', $request->service);
-            });
-        }
-
-        $schedules = $query->orderBy('day_sheets.date', 'asc')
-            ->orderBy('day_sheets.start_time', 'asc')
-            ->get()
-            ->map(function ($daySheet) {
-                return [
-                    'id' => $daySheet->id,
-                    'date' => $daySheet->formatted_date,
-                    'start_time' => $daySheet->start_time,
-                    'end_time' => $daySheet->end_time,
-                    'doctor_name' => $daySheet->doctor->user->first_name . ' ' . $daySheet->doctor->user->last_name,
-                    'specializations' => $daySheet->doctor->specializations->pluck('name')->toArray(),
-                    'clinic' => [
-                        'name' => $daySheet->clinic->name,
-                        'region' => $daySheet->clinic->region,
-                        'city' => $daySheet->clinic->city,
-                        'address' => $daySheet->clinic->address,
-                        'phone_number' => $daySheet->clinic->phone_number,
-                        'email' => $daySheet->clinic->email,
-                    ],
-                ];
-            });
-
-        return response()->json($schedules, 200);
+        return ScheduleResource::collection($schedules)->resolve();
     }
 
-    public function getDayScheduleForPatient($dayId)
+    public function getDayScheduleForPatient($dayId, ScheduleService $scheduleService)
     {
-        $daySheet = DaySheet::with(['timeSheets'])
-            ->whereHas('timeSheets', function ($query) {
-                $query->where('is_active', true);
-            })
-            ->find($dayId);
+        $scheduleData = $scheduleService->getDayScheduleForPatient($dayId);
 
-        if (!$daySheet) {
+        if (!$scheduleData) {
             return response()->json(['message' => 'Розклад не знайдено'], 404);
         }
 
-        $currentDate = now()->toDateString();
-        $currentTime = now()->format('H:i');
-
-        $isToday = $daySheet->date === $currentDate;
-
         return response()->json([
-            'date' => $daySheet->formatted_date,
-            'time_sheets' => $daySheet->timeSheets->filter(function ($timeSheet) use ($isToday, $currentTime) {
-                if ($isToday) {
-                    return Carbon::createFromFormat('H:i', $timeSheet->start_time)->gte(Carbon::createFromFormat('H:i', $currentTime));
-                }
-                return true;
-            })->map(function ($timeSheet) {
-                return [
-                    'id' => $timeSheet->id,
-                    'start_time' => $timeSheet->start_time,
-                    'end_time' => $timeSheet->end_time,
-                    'is_active' => $timeSheet->is_active,
-                ];
-            })->values(),
+            'date' => $scheduleData['date'],
+            'time_sheets' => TimeSheetResource::collection($scheduleData['time_sheets']),
         ]);
     }
 }

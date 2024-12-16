@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Resources\Patient;
+namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class DetailedResource extends JsonResource
+class DoctorDetailedResource extends JsonResource
 {
+
     /**
      * Transform the resource into an array.
      *
@@ -16,14 +17,16 @@ class DetailedResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'first_name' => $this->user->first_name,
-            'last_name' => $this->user->last_name,
+            'full_name' => $this->user->first_name . ' ' . $this->user->last_name,
             'email' => $this->user->email,
             'date_of_birth' => $this->user->date_of_birth,
-            'gender' => $this->user->gender,
             'address' => $this->user->address,
             'phone_number' => $this->user->phone_number,
-            'appointments' => $this->appointments,
+            'photo' => $this->user->photo,
+            'clinic' => $this->clinic->name,
+            'specializations' => $this->specializations->pluck('name'),
+            'position' => $this->position,
+            'bio' => $this->bio,
         ];
     }
 }

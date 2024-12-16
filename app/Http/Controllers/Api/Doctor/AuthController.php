@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Doctor\LoginRequest;
-use App\Http\Resources\Doctor\DetailedResource;
+use App\Http\Resources\DoctorDetailedResource;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -16,7 +16,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password) || !$user->doctor) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+            return response()->json(['message' => 'Невірні дані для входу'], 401);
         }
 
         $token = $user->createToken('doctor-token')->plainTextToken;
@@ -29,11 +29,7 @@ class AuthController extends Controller
     {
         $doctor = $request->user()->doctor;
 
-        if (!$doctor) {
-            return response()->json(['message' => 'Unauthorized'], 403);
-        }
-
-        return DetailedResource::make($doctor->load(['clinic', 'specializations']))->resolve();
+        return DoctorDetailedResource::make($doctor->load(['clinic', 'specializations']))->resolve();
     }
 
 
